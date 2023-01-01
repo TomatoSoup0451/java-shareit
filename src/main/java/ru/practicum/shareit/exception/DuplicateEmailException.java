@@ -1,11 +1,11 @@
 package ru.practicum.shareit.exception;
 
-public class DublicateEmailException extends RuntimeException{
-    public DublicateEmailException() {
+public class DuplicateEmailException extends RuntimeException{
+    public DuplicateEmailException() {
         super();
     }
 
-    public DublicateEmailException(String message) {
+    public DuplicateEmailException(String message) {
         super(message);
     }
 }
