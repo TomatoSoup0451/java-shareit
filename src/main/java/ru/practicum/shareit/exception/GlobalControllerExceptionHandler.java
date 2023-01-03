@@ -30,7 +30,7 @@ public class GlobalControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)
-    public void HandleForbiddenException(Exception e) {
+    public void handleForbiddenException(Exception e) {
         log.warn(e.getMessage());
     }
 }
