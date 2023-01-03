@@ -3,8 +3,8 @@ package ru.practicum.shareit.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.user.model.OnCreate;
-import ru.practicum.shareit.user.model.OnUpdate;
+import ru.practicum.shareit.validationmarkers.OnCreate;
+import ru.practicum.shareit.validationmarkers.OnUpdate;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UserDto {
 
-    private Long id;
+    private long id;
 
     private String name;
 

@@ -6,10 +6,7 @@ import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.IdNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -30,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    public User updateUser(long id, User user) {
         if (!users.containsKey(id)) {
             throw new IdNotFoundException("User with id = " + user.getId() + " not found");
         } else if (users.values().stream()
@@ -45,7 +42,6 @@ public class UserDaoImpl implements UserDao {
         if (user.getEmail() != null) {
             result.setEmail(user.getEmail());
         }
-        users.put(id, result);
         log.info("User with id = " + user.getId() + " updated");
         return result;
     }
@@ -56,11 +52,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUser(long id) {
-        if (!users.containsKey(id)) {
-            throw new IdNotFoundException("User with id = " + id + " not found");
-        }
-        return users.get(id);
+    public Optional<User> getUser(long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override

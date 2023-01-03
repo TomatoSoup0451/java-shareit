@@ -3,19 +3,19 @@ package ru.practicum.shareit.user.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.validationmarkers.OnCreate;
+import ru.practicum.shareit.validationmarkers.OnUpdate;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @Builder
 @Getter
 @Setter
 public class User {
 
-    private Long id;
+    private long id;
 
     private String name;
 

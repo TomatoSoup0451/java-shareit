@@ -8,21 +8,18 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Builder
 @Getter
 public class Booking {
-    @Setter
-    private Long id;
     private final LocalDateTime start;
     private final LocalDateTime end;
     private final Item item;
     private final User booker;
     private final Status status;
+    @Setter
+    private long id;
 
-    private enum Status{
+    public enum Status {
         WAITING, APPROVED, REJECTED, CANCELED
     }
 }
