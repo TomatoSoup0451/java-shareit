@@ -12,6 +12,7 @@ import ru.practicum.shareit.request.dao.ItemRequestDao;
 import ru.practicum.shareit.user.dao.UserDao;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +49,15 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getUserItems(long userId) {
         userDao.getUser(userId)
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found"));
-        return itemDao.getUserItems(userId);
+        return itemDao.getUserItems(userId).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> getItemsByName(String text) {
-        return itemDao.getItemsByName(text);
+        return itemDao.getItemsByName(text).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 }

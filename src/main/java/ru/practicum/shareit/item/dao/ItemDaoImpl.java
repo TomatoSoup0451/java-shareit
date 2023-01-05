@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.IdNotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -22,7 +20,7 @@ public class ItemDaoImpl implements ItemDao {
     public Item createItem(Item item) {
         item.setId(++id);
         items.put(item.getId(), item);
-        log.info("Item with id = " + item.getId() + " added");
+        log.info("Item with id = {} added", item.getId());
         return item;
     }
 
@@ -45,7 +43,7 @@ public class ItemDaoImpl implements ItemDao {
         if (item.getAvailable() != null) {
             result.setAvailable(item.getAvailable());
         }
-        log.info("Item with id = " + result.getId() + " updated");
+        log.info("Item with id = {} updated", result.getId());
         return result;
     }
 
@@ -55,15 +53,14 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public List<ItemDto> getUserItems(long userId) {
+    public List<Item> getUserItems(long userId) {
         return items.values().stream()
                 .filter(item -> item.getOwner().getId() == userId)
-                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ItemDto> getItemsByName(String text) {
+    public List<Item> getItemsByName(String text) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
@@ -71,7 +68,6 @@ public class ItemDaoImpl implements ItemDao {
                 .filter(item -> ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
                         item.getDescription().toLowerCase().contains(text.toLowerCase())) &&
                         item.getAvailable()))
-                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 }

@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
         }
         user.setId(++id);
         users.put(user.getId(), user);
-        log.info("User with id = " + user.getId() + " added");
+        log.info("User with id = {} added", user.getId());
         return user;
     }
 
@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
         if (user.getEmail() != null) {
             result.setEmail(user.getEmail());
         }
-        log.info("User with id = " + user.getId() + " updated");
+        log.info("User with id = {} updated", user.getId());
         return result;
     }
 
@@ -57,12 +57,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User deleteUser(long id) {
-        if (!users.containsKey(id)) {
-            throw new IdNotFoundException("User with id = " + id + " not found");
-        }
-        User result = users.get(id);
+    public void deleteUser(long id) {
         users.remove(id);
-        return result;
     }
 }
