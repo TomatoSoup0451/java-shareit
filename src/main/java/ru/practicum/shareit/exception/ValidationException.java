@@ -7,7 +7,7 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ValidationException extends RuntimeException {
+public class ValidationException extends BadRequestException {
     private final BindingResult errors;
 
     public ValidationException(BindingResult errors) {

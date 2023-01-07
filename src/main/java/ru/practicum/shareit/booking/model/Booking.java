@@ -1,25 +1,43 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
+@Setter
+@Entity
+@Table(name = "bookings")
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Booking {
-    private final LocalDateTime start;
-    private final LocalDateTime end;
-    private final Item item;
-    private final User booker;
-    private final Status status;
-    @Setter
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    public enum Status {
-        WAITING, APPROVED, REJECTED, CANCELED
-    }
+    @Column(name = "start_date")
+    private LocalDateTime start;
+
+    @Column(name = "end_date")
+    private LocalDateTime end;
+
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "booker_id")
+    private User booker;
+
+    @Enumerated(javax.persistence.EnumType.STRING)
+    private Status status;
+
+
 }

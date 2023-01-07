@@ -8,7 +8,6 @@ public class ItemRequestMapper {
                 .id(itemRequest.getId())
                 .requestor(itemRequest.getRequestor().getId())
                 .description(itemRequest.getDescription())
-                .created(itemRequest.getCreated())
                 .build();
     }
 }
