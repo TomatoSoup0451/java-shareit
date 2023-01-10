@@ -3,6 +3,7 @@ package ru.practicum.shareit.request.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.IdNotFoundException;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -26,6 +27,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequest addRequest(long requestorId, ItemRequestDto itemRequestDto) {
+        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isEmpty()) {
+            throw new BadRequestException("Message in request should not be empty");
+        }
         ItemRequest itemRequest = itemRequestRepository.save(ItemRequestMapper.toItemRequest(itemRequestDto,
                 userRepository.findById(requestorId)
                         .orElseThrow(() -> new IdNotFoundException("User with id = " + requestorId + " not found")),
@@ -39,7 +43,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User requestor = userRepository.findById(requestorId)
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + requestorId + " not found"));
         return itemRequestRepository.findAllByRequestor(requestor).stream()
-                .map(i -> ItemRequestMapper.toItemRequestDto(i, itemRepository.findAllByRequest(i)))
+                .map(this::getItemRequestDtoWithItems)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ItemRequestDto getRequest(long requestId) {
+        return getItemRequestDtoWithItems(itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IdNotFoundException("Request with id = " + requestId + " not found")));
+    }
+
+    private ItemRequestDto getItemRequestDtoWithItems(ItemRequest itemRequest) {
+        return ItemRequestMapper.toItemRequestDto(itemRequest, itemRepository.findAllByRequest(itemRequest));
     }
 }

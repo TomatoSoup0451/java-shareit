@@ -28,6 +28,6 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     public ItemRequestDto getRequest(@PathVariable long requestId){
-
+        return itemRequestService.getRequest(requestId);
     }
 }

@@ -41,7 +41,8 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.save(ItemMapper.toItem(itemDto,
                 userRepository.findById(userId)
                         .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found")),
-                itemRequestRepository.findById(itemDto.getRequest()).orElse(null)));
+                itemDto.getRequestId() != null ?
+                        itemRequestRepository.findById(itemDto.getRequestId()).orElse(null) : null));
         log.info("Item with id = {} added", item.getId());
         return item;
     }
