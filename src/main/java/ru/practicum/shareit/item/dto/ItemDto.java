@@ -2,10 +2,12 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Value;
+import ru.practicum.shareit.booking.dto.ShortBookingDto;
 import ru.practicum.shareit.validationmarkers.OnCreate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Builder
 @Value
@@ -19,4 +21,7 @@ public class ItemDto {
     long owner;
     long request;
     long id;
+    ShortBookingDto lastBooking;
+    ShortBookingDto nextBooking;
+    List<CommentDto> comments;
 }

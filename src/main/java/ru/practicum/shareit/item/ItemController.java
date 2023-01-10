@@ -5,6 +5,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -12,9 +14,6 @@ import ru.practicum.shareit.validationmarkers.OnCreate;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -40,8 +39,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable long itemId) {
-        return itemService.getItem(itemId);
+    public ItemDto getItem(@PathVariable long itemId, @RequestHeader("X-Sharer-User-Id") long userId) {
+        return itemService.getItem(userId, itemId);
     }
 
     @GetMapping
@@ -53,4 +52,11 @@ public class ItemController {
     public List<ItemDto> getItemsByName(@RequestParam String text) {
         return itemService.getItemsByName(text);
     }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@PathVariable long itemId, @RequestHeader("X-Sharer-User-Id") long userId,
+                                 @RequestBody CommentDto commentDto) {
+        return CommentMapper.toCommentDto(itemService.addComment(itemId, userId, commentDto));
+    }
+
 }
