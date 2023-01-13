@@ -12,7 +12,7 @@ public interface ItemRequestService {
 
     ItemRequestDto getRequest(long requestorId, long requestId);
 
-    List<ItemRequestDto> getAllRequests(int from, int size);
+    List<ItemRequestDto> getAllRequests(int from, int size, long requestorId);
 
-    List<ItemRequestDto> getAllRequests();
+    List<ItemRequestDto> getAllRequests(long requestorId);
 }

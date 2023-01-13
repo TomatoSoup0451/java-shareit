@@ -8,7 +8,6 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.validationmarkers.OnCreate;
 
@@ -24,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
-                           BindingResult errors) {
+                              BindingResult errors) {
         validator.validate(itemDto, errors, OnCreate.class);
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
@@ -34,7 +33,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
-                           @PathVariable long itemId) {
+                              @PathVariable long itemId) {
         return itemService.updateItem(itemDto, userId, itemId);
     }
 
@@ -48,9 +47,23 @@ public class ItemController {
         return itemService.getUserItems(userId);
     }
 
+    @GetMapping(params = {"from", "size"})
+    public List<ItemDto> getUserItemsWithPagination(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                    @RequestParam int from,
+                                                    @RequestParam int size) {
+        return itemService.getUserItems(userId, from, size);
+    }
+
     @GetMapping("/search")
     public List<ItemDto> getItemsByName(@RequestParam String text) {
         return itemService.getItemsByName(text);
+    }
+
+    @GetMapping(path = "/search", params = {"from", "size", "text"})
+    public List<ItemDto> getItemsByNameWithPagination(@RequestParam String text,
+                                                      @RequestParam int from,
+                                                      @RequestParam int size) {
+        return itemService.getItemsByName(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

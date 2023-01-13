@@ -56,19 +56,20 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequestDto> getAllRequests(int from, int size) {
+    public List<ItemRequestDto> getAllRequests(int from, int size, long requestorId) {
+        User requestor = getUserById(requestorId);
         return itemRequestRepository
-                .findAll(getPageable(from, size))
-                .getContent()
+                .findAllByRequestorNot(requestor, getPageable(from, size))
                 .stream()
                 .map(this::getItemRequestDtoWithItems)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ItemRequestDto> getAllRequests() {
+    public List<ItemRequestDto> getAllRequests(long requestorId) {
+        User requestor = getUserById(requestorId);
         return itemRequestRepository
-                .findAll()
+                .findAllByRequestorNot(requestor)
                 .stream()
                 .map(this::getItemRequestDtoWithItems)
                 .collect(Collectors.toList());

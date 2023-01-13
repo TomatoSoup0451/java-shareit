@@ -32,12 +32,13 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAllRequestsWithoutPagination() {
-        return itemRequestService.getAllRequests();
+    public List<ItemRequestDto> getAllRequestsWithoutPagination(@RequestHeader("X-Sharer-User-Id") long requestorId) {
+        return itemRequestService.getAllRequests(requestorId);
     }
 
     @GetMapping(value = "/all", params = {"from", "size"})
-    public List<ItemRequestDto> getAllRequests(@RequestParam int from, @RequestParam final int size) {
-        return itemRequestService.getAllRequests(from, size);
+    public List<ItemRequestDto> getAllRequests(@RequestParam int from, @RequestParam final int size,
+                                               @RequestHeader("X-Sharer-User-Id") long requestorId) {
+        return itemRequestService.getAllRequests(from, size, requestorId);
     }
 }

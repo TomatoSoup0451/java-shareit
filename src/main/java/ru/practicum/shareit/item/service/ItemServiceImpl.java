@@ -2,6 +2,9 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -79,7 +82,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
-        LocalDateTime now = LocalDateTime.now();
         return itemRepository.findByOwnerIdOrderByIdAsc(userId).stream()
                 .map(this::getDtoWithBookings)
                 .map(this::addCommentsToDto)
@@ -113,6 +115,24 @@ public class ItemServiceImpl implements ItemService {
         return commentRepository.save(CommentMapper.toComment(commentDto, user, item, now));
     }
 
+    @Override
+    public List<ItemDto> getUserItems(long userId, int from, int size) {
+        return itemRepository.findByOwnerId(userId, getPageable(from, size)).stream()
+                .map(this::getDtoWithBookings)
+                .map(this::addCommentsToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemDto> getItemsByName(String text, int from, int size) {
+        if (text == null || text.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return itemRepository.findByName(text, getPageable(from, size)).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+    }
+
     private ItemDto getDtoWithBookings(Item item) {
         LocalDateTime now = LocalDateTime.now();
         List<Booking> lastBookings = bookingRepository.findByItemIdAndStartBeforeOrderByStartDesc(item.getId(), now);
@@ -129,5 +149,14 @@ public class ItemServiceImpl implements ItemService {
                     .map(CommentMapper::toCommentDto).collect(Collectors.toList()));
         }
         return itemDto;
+    }
+
+    private Pageable getPageable(int from, int size){
+        if (from < 0) {
+            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
+        } else if (size <= 0) {
+            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
+        }
+        return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 }
