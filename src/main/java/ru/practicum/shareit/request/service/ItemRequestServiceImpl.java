@@ -2,6 +2,9 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.IdNotFoundException;
@@ -31,8 +34,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             throw new BadRequestException("Message in request should not be empty");
         }
         ItemRequest itemRequest = itemRequestRepository.save(ItemRequestMapper.toItemRequest(itemRequestDto,
-                userRepository.findById(requestorId)
-                        .orElseThrow(() -> new IdNotFoundException("User with id = " + requestorId + " not found")),
+                getUserById(requestorId),
                 LocalDateTime.now()));
         log.info("Request with id = {} added", itemRequest.getId());
         return itemRequest;
@@ -40,20 +42,53 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getUserRequests(long requestorId) {
-        User requestor = userRepository.findById(requestorId)
-                .orElseThrow(() -> new IdNotFoundException("User with id = " + requestorId + " not found"));
+        User requestor = getUserById(requestorId);
         return itemRequestRepository.findAllByRequestor(requestor).stream()
                 .map(this::getItemRequestDtoWithItems)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemRequestDto getRequest(long requestId) {
+    public ItemRequestDto getRequest(long requestorId, long requestId) {
+        getUserById(requestorId);
         return getItemRequestDtoWithItems(itemRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IdNotFoundException("Request with id = " + requestId + " not found")));
     }
 
+    @Override
+    public List<ItemRequestDto> getAllRequests(int from, int size) {
+        return itemRequestRepository
+                .findAll(getPageable(from, size))
+                .getContent()
+                .stream()
+                .map(this::getItemRequestDtoWithItems)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemRequestDto> getAllRequests() {
+        return itemRequestRepository
+                .findAll()
+                .stream()
+                .map(this::getItemRequestDtoWithItems)
+                .collect(Collectors.toList());
+    }
+
     private ItemRequestDto getItemRequestDtoWithItems(ItemRequest itemRequest) {
         return ItemRequestMapper.toItemRequestDto(itemRequest, itemRepository.findAllByRequest(itemRequest));
+    }
+
+    private User getUserById(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found"));
+    }
+
+    private Pageable getPageable(int from, int size){
+        if (from < 0) {
+            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
+        } else if (size <= 0) {
+            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
+        }
+        return PageRequest.of(from / size, size, Sort.by("created").ascending());
     }
 }

@@ -2,6 +2,9 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -69,6 +72,7 @@ public class BookingServiceImpl implements BookingService {
         return updatedBooking;
     }
 
+
     @Override
     public Booking findBooking(long userId, long bookingId) {
         Booking booking = getUncheckedBookingById(bookingId);
@@ -127,8 +131,68 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    @Override
+    public List<Booking> getUserBookings(BookingState state, long bookerId, int from, int size) {
+        userRepository.findById(bookerId)
+                .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found"));
+        Pageable pageable = getPageable(from, size);
+        switch (state) {
+            case WAITING:
+                return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.WAITING, pageable);
+            case FUTURE:
+                return bookingRepository
+                        .findByBookerIdAndStartAfterOrderByIdDesc(bookerId, LocalDateTime.now(), pageable);
+            case REJECTED:
+                return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.REJECTED, pageable);
+            case CURRENT:
+                LocalDateTime now = LocalDateTime.now();
+                return bookingRepository.findByBookerIdAndStartBeforeAndEndAfterOrderByIdDesc(bookerId, now,
+                        now, pageable);
+            case PAST:
+                return bookingRepository.findByBookerIdAndEndBeforeOrderByIdDesc(bookerId,
+                        LocalDateTime.now(), pageable);
+            case ALL:
+                return bookingRepository.findByBookerIdOrderByIdDesc(bookerId, pageable);
+            default:
+                throw new UnsupportedOperationException("Unknown state: " + state.name());
+        }
+    }
+
+    @Override
+    public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId, int from, int size) {
+        userRepository.findById(ownerId)
+                .orElseThrow(() -> new IdNotFoundException("User with id = " + ownerId + " not found"));
+        Pageable pageable = getPageable(from, size);
+        switch (state) {
+            case WAITING:
+                return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.WAITING, pageable);
+            case FUTURE:
+                return bookingRepository
+                        .findByOwnerIdAndStartAfter(ownerId, LocalDateTime.now(), pageable);
+            case REJECTED:
+                return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.REJECTED, pageable);
+            case CURRENT:
+                return bookingRepository.findByOwnerIdAndStartBeforeAndEndAfter(ownerId, LocalDateTime.now(), pageable);
+            case PAST:
+                return bookingRepository.findByOwnerIdAndEndBefore(ownerId, LocalDateTime.now(), pageable);
+            case ALL:
+                return bookingRepository.findByOwnerId(ownerId, pageable);
+            default:
+                throw new UnsupportedOperationException("Unknown state: " + state.name());
+        }
+    }
+
     private Booking getUncheckedBookingById(long bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IdNotFoundException("Booking with id = " + bookingId + " not found"));
+    }
+
+    private Pageable getPageable(int from, int size) {
+        if (from < 0) {
+            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
+        } else if (size <= 0) {
+            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
+        }
+        return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 }

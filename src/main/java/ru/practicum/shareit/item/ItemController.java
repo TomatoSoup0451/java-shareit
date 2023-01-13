@@ -23,7 +23,7 @@ public class ItemController {
     private final SmartValidator validator;
 
     @PostMapping
-    public Item createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
                            BindingResult errors) {
         validator.validate(itemDto, errors, OnCreate.class);
         if (errors.hasErrors()) {
@@ -33,7 +33,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto updateItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
                            @PathVariable long itemId) {
         return itemService.updateItem(itemDto, userId, itemId);
     }

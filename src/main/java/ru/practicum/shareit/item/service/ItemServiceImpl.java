@@ -37,18 +37,18 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public Item createItem(ItemDto itemDto, long userId) {
+    public ItemDto createItem(ItemDto itemDto, long userId) {
         Item item = itemRepository.save(ItemMapper.toItem(itemDto,
                 userRepository.findById(userId)
                         .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found")),
                 itemDto.getRequestId() != null ?
                         itemRequestRepository.findById(itemDto.getRequestId()).orElse(null) : null));
         log.info("Item with id = {} added", item.getId());
-        return item;
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
-    public Item updateItem(ItemDto itemDto, long userId, long itemId) {
+    public ItemDto updateItem(ItemDto itemDto, long userId, long itemId) {
         Item oldItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IdNotFoundException("Item with id = " + itemId + " not found"));
         if (oldItem.getOwner().getId() != userId) {
@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         }
         Item updatedItem = itemRepository.save(oldItem);
         log.info("Item with id = {} updated", updatedItem.getId());
-        return updatedItem;
+        return ItemMapper.toItemDto(updatedItem);
     }
 
     @Override

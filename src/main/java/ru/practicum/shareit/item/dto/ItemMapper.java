@@ -33,16 +33,6 @@ public class ItemMapper {
                 .build();
     }
 
-    public static Item toUpdatedItem(ItemDto itemDto, User owner, long itemId) {
-        return Item.builder()
-                .id(itemId)
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .owner(owner)
-                .build();
-    }
-
     public static ItemDto toItemDtoWithBookingDates(Item item, Booking lastBooking, Booking nextBooking) {
         return ItemDto.builder()
                 .id(item.getId())
