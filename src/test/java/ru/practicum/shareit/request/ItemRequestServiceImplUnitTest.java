@@ -19,16 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class ItemRequestServiceImplUnitTest {
 
-    @Mock
-    ItemRepository mockItemRepository;
-
-    @Mock
-    UserRepository mockUserRepository;
-
-    @Mock
-    ItemRequestRepository mockItemRequestRepository;
-
-
     @InjectMocks
     ItemRequestServiceImpl itemRequestService;
 
@@ -39,11 +29,6 @@ class ItemRequestServiceImplUnitTest {
         final BadRequestException e = assertThrows(BadRequestException.class,
                 () -> itemRequestService.addRequest(1, itemRequestDto));
         assertThat(e.getMessage(), equalTo("Message in request should not be empty"));
-    }
-
-
-    private ItemRequestDto getValidItemRequestDto() {
-        return ItemRequestDto.builder().description("Description").build();
     }
 
     private ItemRequestDto getInvalidItemRequestDto() {
