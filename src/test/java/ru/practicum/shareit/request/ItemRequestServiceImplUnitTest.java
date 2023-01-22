@@ -1,19 +1,20 @@
-package ru.practicum.shareit.request.service;
+package ru.practicum.shareit.request;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
+import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ItemRequestServiceImplUnitTest {
@@ -28,8 +29,8 @@ class ItemRequestServiceImplUnitTest {
     ItemRequestRepository mockItemRequestRepository;
 
 
-    ItemRequestServiceImpl itemRequestService = new ItemRequestServiceImpl(mockItemRequestRepository,
-            mockUserRepository, mockItemRepository);
+    @InjectMocks
+    ItemRequestServiceImpl itemRequestService;
 
 
     @Test
@@ -41,11 +42,11 @@ class ItemRequestServiceImplUnitTest {
     }
 
 
-    private ItemRequestDto getValidItemRequestDto(){
+    private ItemRequestDto getValidItemRequestDto() {
         return ItemRequestDto.builder().description("Description").build();
     }
 
-    private ItemRequestDto getInvalidItemRequestDto(){
+    private ItemRequestDto getInvalidItemRequestDto() {
         return ItemRequestDto.builder().description("").build();
     }
 

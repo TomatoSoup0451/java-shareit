@@ -69,9 +69,9 @@ public class BookingController {
 
     @GetMapping(path = "/owner", params = {"from", "size"})
     public List<Booking> getOwnerItemBookingsWithPagination(@RequestParam int from,
-                                                       @RequestParam int size,
-                                                       @RequestParam(required = false) String state,
-                                                       @RequestHeader("X-Sharer-User-Id") long ownerId) {
+                                                            @RequestParam int size,
+                                                            @RequestParam(required = false) String state,
+                                                            @RequestHeader("X-Sharer-User-Id") long ownerId) {
         if (from < 0) {
             throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
         } else if (size <= 0) {

@@ -84,7 +84,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found"));
     }
 
-    private Pageable getPageable(int from, int size){
+    private Pageable getPageable(int from, int size) {
         if (from < 0) {
             throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
         } else if (size <= 0) {

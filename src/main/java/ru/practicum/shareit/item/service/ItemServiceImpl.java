@@ -125,10 +125,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemsByName(String text, int from, int size) {
+        Pageable pageable = getPageable(from, size);
         if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
-        return itemRepository.findByName(text, getPageable(from, size)).stream()
+        return itemRepository.findByName(text, pageable).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -151,7 +152,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    private Pageable getPageable(int from, int size){
+    private Pageable getPageable(int from, int size) {
         if (from < 0) {
             throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
         } else if (size <= 0) {

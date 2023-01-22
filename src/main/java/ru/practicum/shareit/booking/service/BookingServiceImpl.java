@@ -46,10 +46,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.save(BookingMapper.toBooking(bookingDto,
                 userRepository.findById(bookerId)
                         .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found")),
-                itemRepository.findById(bookingDto.getItem())
-                        .orElseThrow(() -> new IdNotFoundException("Item with id = " +
-                                bookingDto.getItem() + " not found")),
-                Status.WAITING));
+                item, Status.WAITING));
         log.info("Booking with id = {} added", booking.getId());
         return booking;
     }
@@ -188,11 +185,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Pageable getPageable(int from, int size) {
-        if (from < 0) {
-            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
-        } else if (size <= 0) {
-            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
-        }
         return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 }
