@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -91,7 +92,8 @@ class ItemIntegrationTest {
 
     @Test
     public void shouldReturnListOfOneItemForUser1WithPagination() {
-        List<ItemDto> items = itemService.getUserItems(1, 0, 1);
+        List<ItemDto> items = itemService.getUserItems(1,
+                PageRequest.of(0, 1));
         assertThat(items.size(), equalTo(1));
         assertThat(items.get(0).getId(), equalTo(1L));
         assertThat(items.get(0).getName(), equalTo("Item1"));
@@ -100,7 +102,8 @@ class ItemIntegrationTest {
 
     @Test
     public void shouldReturnListOfOneItemWhenSearchWithPagination() {
-        List<ItemDto> items = itemService.getItemsByName("tion", 0, 1);
+        List<ItemDto> items = itemService.getItemsByName("tion",
+                PageRequest.of(0, 10));
         assertThat(items.size(), equalTo(1));
         assertThat(items.get(0).getId(), equalTo(1L));
         assertThat(items.get(0).getName(), equalTo("Item1"));

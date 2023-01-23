@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -84,7 +85,8 @@ public class BookingIntegrationTest {
 
     @Test
     public void shouldReturnOneBookingWhenStatePastAndPaginated() {
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.PAST, 2, 0, 10);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.PAST,
+                2, PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
         assertThat(bookings.get(0).getId(), equalTo(1L));
         assertThat(bookings.get(0).getItem().getId(), equalTo(1L));
@@ -97,7 +99,8 @@ public class BookingIntegrationTest {
 
     @Test
     public void shouldReturnOneBookingForOwner1WhenFutureAndPaginated() {
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.FUTURE, 1, 0, 10);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.FUTURE,
+                1, PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
         assertThat(bookings.get(0).getId(), equalTo(2L));
         assertThat(bookings.get(0).getItem().getId(), equalTo(1L));

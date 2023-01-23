@@ -1,9 +1,13 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentMapper;
@@ -51,7 +55,7 @@ public class ItemController {
     public List<ItemDto> getUserItemsWithPagination(@RequestHeader("X-Sharer-User-Id") long userId,
                                                     @RequestParam int from,
                                                     @RequestParam int size) {
-        return itemService.getUserItems(userId, from, size);
+        return itemService.getUserItems(userId, getPageable(from, size));
     }
 
     @GetMapping("/search")
@@ -63,13 +67,22 @@ public class ItemController {
     public List<ItemDto> getItemsByNameWithPagination(@RequestParam String text,
                                                       @RequestParam int from,
                                                       @RequestParam int size) {
-        return itemService.getItemsByName(text, from, size);
+        return itemService.getItemsByName(text, getPageable(from, size));
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable long itemId, @RequestHeader("X-Sharer-User-Id") long userId,
                                  @RequestBody CommentDto commentDto) {
         return CommentMapper.toCommentDto(itemService.addComment(itemId, userId, commentDto));
+    }
+
+    private Pageable getPageable(int from, int size) {
+        if (from < 0) {
+            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
+        } else if (size <= 0) {
+            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
+        }
+        return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 
 }

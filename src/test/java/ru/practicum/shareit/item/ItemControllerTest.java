@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -93,7 +94,7 @@ public class ItemControllerTest {
 
     @Test
     public void shouldReturnListOf1ItemForUserWhenPaginated() throws Exception {
-        when(itemService.getUserItems(anyLong(), anyInt(), anyInt())).thenReturn(List.of(newItemDto));
+        when(itemService.getUserItems(anyLong(), any(Pageable.class))).thenReturn(List.of(newItemDto));
         mvc.perform(get("/items")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .param("from", "0")
@@ -117,7 +118,7 @@ public class ItemControllerTest {
 
     @Test
     public void shouldReturnListOf1ItemWhenSearchAndPaginated() throws Exception {
-        when(itemService.getItemsByName(anyString(), anyInt(), anyInt())).thenReturn(List.of(newItemDto));
+        when(itemService.getItemsByName(anyString(), any(Pageable.class))).thenReturn(List.of(newItemDto));
         mvc.perform(get("/items/search")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .param("from", "0")

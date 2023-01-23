@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.IdNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -78,21 +78,7 @@ public class ItemServiceUnitTest {
 
     @Test
     public void shouldReturnEmptyListWhenSearchWithEmptyStringAndPagination() {
-        List<ItemDto> items = itemService.getItemsByName("", 0, 1);
+        List<ItemDto> items = itemService.getItemsByName("", PageRequest.of(0, 10));
         assertThat(items.size(), equalTo(0));
-    }
-
-    @Test
-    public void shouldTrowBadRequestExceptionWhenPaginationFromNegative() {
-        final BadRequestException e = assertThrows(BadRequestException.class,
-                () -> itemService.getItemsByName("", -1, 10));
-        assertThat(e.getMessage(), equalTo("Pagination parameter from should not be negative but was -1"));
-    }
-
-    @Test
-    public void shouldTrowBadRequestExceptionWhenPaginationSizeNegative() {
-        final BadRequestException e = assertThrows(BadRequestException.class,
-                () -> itemService.getItemsByName("", 0, -1));
-        assertThat(e.getMessage(), equalTo("Pagination parameter size should be positive but was -1"));
     }
 }

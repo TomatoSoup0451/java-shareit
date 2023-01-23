@@ -1,6 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -53,12 +56,7 @@ public class BookingController {
                                                        @RequestParam int size,
                                                        @RequestParam(required = false) String state,
                                                        @RequestHeader("X-Sharer-User-Id") long userId) {
-        if (from < 0) {
-            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
-        } else if (size <= 0) {
-            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
-        }
-        return bookingService.getUserBookings(parseState(state), userId, from, size);
+        return bookingService.getUserBookings(parseState(state), userId, getPageable(from, size));
     }
 
     @GetMapping(path = "/owner")
@@ -72,12 +70,7 @@ public class BookingController {
                                                             @RequestParam int size,
                                                             @RequestParam(required = false) String state,
                                                             @RequestHeader("X-Sharer-User-Id") long ownerId) {
-        if (from < 0) {
-            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
-        } else if (size <= 0) {
-            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
-        }
-        return bookingService.getOwnerItemsBookings(parseState(state), ownerId, from, size);
+        return bookingService.getOwnerItemsBookings(parseState(state), ownerId, getPageable(from, size));
     }
 
     private BookingState parseState(String state) {
@@ -90,4 +83,12 @@ public class BookingController {
         return bookingState;
     }
 
+    private Pageable getPageable(int from, int size) {
+        if (from < 0) {
+            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
+        } else if (size <= 0) {
+            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
+        }
+        return PageRequest.of(from / size, size, Sort.by("id").ascending());
+    }
 }

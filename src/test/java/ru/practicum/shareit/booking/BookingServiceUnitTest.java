@@ -221,7 +221,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.WAITING,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.WAITING, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.WAITING, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -235,7 +236,8 @@ public class BookingServiceUnitTest {
                         .findByBookerIdAndStartAfterOrderByIdDesc(anyLong(), any(LocalDateTime.class),
                                 any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.FUTURE, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.FUTURE, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -248,7 +250,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.REJECTED,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.REJECTED, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.REJECTED, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -264,7 +267,8 @@ public class BookingServiceUnitTest {
                                 any(LocalDateTime.class),
                                 any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.CURRENT, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.CURRENT, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -278,7 +282,8 @@ public class BookingServiceUnitTest {
                         .findByBookerIdAndEndBeforeOrderByIdDesc(anyLong(), any(LocalDateTime.class),
                                 any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.PAST, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.PAST, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -291,7 +296,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByBookerIdOrderByIdDesc(1,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getUserBookings(BookingState.ALL, 1, 0, 1);
+        List<Booking> bookings = bookingService.getUserBookings(BookingState.ALL, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -379,7 +385,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.WAITING,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.WAITING, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.WAITING, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -392,7 +399,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository
                         .findByOwnerIdAndStartAfter(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.FUTURE, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.FUTURE, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -405,7 +413,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.REJECTED,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.REJECTED, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.REJECTED, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -419,7 +428,8 @@ public class BookingServiceUnitTest {
                         .findByOwnerIdAndStartBeforeAndEndAfter(anyLong(), any(LocalDateTime.class),
                                 any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.CURRENT, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.CURRENT, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -432,7 +442,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository
                         .findByOwnerIdAndEndBefore(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.PAST, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.PAST, 1,
+                PageRequest.of(0, 10));
         assertThat(bookings.size(), equalTo(1));
     }
 
@@ -445,7 +456,8 @@ public class BookingServiceUnitTest {
                 .when(mockBookingRepository.findByOwnerId(1,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
                 .thenReturn(List.of(Booking.builder().build()));
-        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.ALL, 1, 0, 1);
+        List<Booking> bookings = bookingService.getOwnerItemsBookings(BookingState.ALL, 1,
+                PageRequest.of(0, 1, Sort.by("id").ascending()));
         assertThat(bookings.size(), equalTo(1));
     }
 }

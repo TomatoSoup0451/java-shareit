@@ -2,9 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -129,10 +127,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getUserBookings(BookingState state, long bookerId, int from, int size) {
+    public List<Booking> getUserBookings(BookingState state, long bookerId, Pageable pageable) {
         userRepository.findById(bookerId)
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found"));
-        Pageable pageable = getPageable(from, size);
         switch (state) {
             case WAITING:
                 return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.WAITING, pageable);
@@ -156,10 +153,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId, int from, int size) {
+    public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId, Pageable pageable) {
         userRepository.findById(ownerId)
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + ownerId + " not found"));
-        Pageable pageable = getPageable(from, size);
         switch (state) {
             case WAITING:
                 return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.WAITING, pageable);
@@ -182,9 +178,5 @@ public class BookingServiceImpl implements BookingService {
     private Booking getUncheckedBookingById(long bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IdNotFoundException("Booking with id = " + bookingId + " not found"));
-    }
-
-    private Pageable getPageable(int from, int size) {
-        return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -104,7 +105,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnListOf1BookingWhenGetUserBookingsAndPaginated() throws Exception {
-        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -120,7 +121,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenGetUserBookingsAndPaginatedFromNegative() throws Exception {
-        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +135,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenGetUserBookingsAndPaginatedSizeNegative() throws Exception {
-        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getUserBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +162,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnListOf1BookingWhenGetOwnerBookingsWithPagination() throws Exception {
-        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings/owner")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -177,7 +178,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenGetOwnerBookingsWithPaginationFromNegative() throws Exception {
-        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings/owner")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -191,7 +192,7 @@ public class BookingControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenGetOwnerBookingsWithPaginationSizeNegative() throws Exception {
-        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), anyInt(), anyInt()))
+        when(bookingService.getOwnerItemsBookings(any(BookingState.class), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(newBooking));
         mvc.perform(get("/bookings/owner")
                         .contentType(MediaType.APPLICATION_JSON)
