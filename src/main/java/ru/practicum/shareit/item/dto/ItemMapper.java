@@ -18,6 +18,7 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .owner(item.getOwner() != null ? item.getOwner().getId() : null)
                 .comments(new ArrayList<>())
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
                 .build();
     }
 
@@ -29,16 +30,6 @@ public class ItemMapper {
                 .available(itemDto.getAvailable())
                 .owner(owner)
                 .request(request)
-                .build();
-    }
-
-    public static Item toUpdatedItem(ItemDto itemDto, User owner, long itemId) {
-        return Item.builder()
-                .id(itemId)
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .owner(owner)
                 .build();
     }
 

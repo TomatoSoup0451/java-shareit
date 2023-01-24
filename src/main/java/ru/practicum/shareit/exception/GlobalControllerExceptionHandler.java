@@ -26,11 +26,6 @@ public class GlobalControllerExceptionHandler {
         log.warn(e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(DuplicateEmailException.class)
-    public void handleDuplicateEmailException(Exception e) {
-        log.warn(e.getMessage());
-    }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)

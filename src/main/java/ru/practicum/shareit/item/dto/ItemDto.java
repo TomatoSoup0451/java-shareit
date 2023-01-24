@@ -19,7 +19,7 @@ public class ItemDto {
     @NotNull(message = "status should not be empty", groups = OnCreate.class)
     Boolean available;
     long owner;
-    long request;
+    Long requestId;
     long id;
     ShortBookingDto lastBooking;
     ShortBookingDto nextBooking;

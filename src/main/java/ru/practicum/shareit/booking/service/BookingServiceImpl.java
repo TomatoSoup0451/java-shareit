@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -43,10 +44,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.save(BookingMapper.toBooking(bookingDto,
                 userRepository.findById(bookerId)
                         .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found")),
-                itemRepository.findById(bookingDto.getItem())
-                        .orElseThrow(() -> new IdNotFoundException("Item with id = " +
-                                bookingDto.getItem() + " not found")),
-                Status.WAITING));
+                item, Status.WAITING));
         log.info("Booking with id = {} added", booking.getId());
         return booking;
     }
@@ -68,6 +66,7 @@ public class BookingServiceImpl implements BookingService {
         log.info("Booking with id = {} updated", updatedBooking.getId());
         return updatedBooking;
     }
+
 
     @Override
     public Booking findBooking(long userId, long bookingId) {
@@ -122,6 +121,55 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findByOwnerIdAndEndBefore(ownerId, LocalDateTime.now());
             case ALL:
                 return bookingRepository.findByOwnerId(ownerId);
+            default:
+                throw new UnsupportedOperationException("Unknown state: " + state.name());
+        }
+    }
+
+    @Override
+    public List<Booking> getUserBookings(BookingState state, long bookerId, Pageable pageable) {
+        userRepository.findById(bookerId)
+                .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found"));
+        switch (state) {
+            case WAITING:
+                return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.WAITING, pageable);
+            case FUTURE:
+                return bookingRepository
+                        .findByBookerIdAndStartAfterOrderByIdDesc(bookerId, LocalDateTime.now(), pageable);
+            case REJECTED:
+                return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.REJECTED, pageable);
+            case CURRENT:
+                LocalDateTime now = LocalDateTime.now();
+                return bookingRepository.findByBookerIdAndStartBeforeAndEndAfterOrderByIdDesc(bookerId, now,
+                        now, pageable);
+            case PAST:
+                return bookingRepository.findByBookerIdAndEndBeforeOrderByIdDesc(bookerId,
+                        LocalDateTime.now(), pageable);
+            case ALL:
+                return bookingRepository.findByBookerIdOrderByIdDesc(bookerId, pageable);
+            default:
+                throw new UnsupportedOperationException("Unknown state: " + state.name());
+        }
+    }
+
+    @Override
+    public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId, Pageable pageable) {
+        userRepository.findById(ownerId)
+                .orElseThrow(() -> new IdNotFoundException("User with id = " + ownerId + " not found"));
+        switch (state) {
+            case WAITING:
+                return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.WAITING, pageable);
+            case FUTURE:
+                return bookingRepository
+                        .findByOwnerIdAndStartAfter(ownerId, LocalDateTime.now(), pageable);
+            case REJECTED:
+                return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.REJECTED, pageable);
+            case CURRENT:
+                return bookingRepository.findByOwnerIdAndStartBeforeAndEndAfter(ownerId, LocalDateTime.now(), pageable);
+            case PAST:
+                return bookingRepository.findByOwnerIdAndEndBefore(ownerId, LocalDateTime.now(), pageable);
+            case ALL:
+                return bookingRepository.findByOwnerId(ownerId, pageable);
             default:
                 throw new UnsupportedOperationException("Unknown state: " + state.name());
         }
