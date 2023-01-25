@@ -4,16 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.validationmarkers.OnCreate;
 
 import java.util.List;
 
@@ -23,15 +18,9 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
-    private final SmartValidator validator;
 
     @PostMapping
-    public ItemDto createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId,
-                              BindingResult errors) {
-        validator.validate(itemDto, errors, OnCreate.class);
-        if (errors.hasErrors()) {
-            throw new ValidationException(errors);
-        }
+    public ItemDto createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.createItem(itemDto, userId);
     }
 
@@ -77,11 +66,6 @@ public class ItemController {
     }
 
     private Pageable getPageable(int from, int size) {
-        if (from < 0) {
-            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
-        } else if (size <= 0) {
-            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
-        }
         return PageRequest.of(from / size, size, Sort.by("id").ascending());
     }
 

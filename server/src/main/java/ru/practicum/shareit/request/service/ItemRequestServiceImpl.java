@@ -2,9 +2,7 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.IdNotFoundException;
@@ -56,10 +54,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequestDto> getAllRequests(int from, int size, long requestorId) {
+    public List<ItemRequestDto> getAllRequests(Pageable pageable, long requestorId) {
         User requestor = getUserById(requestorId);
         return itemRequestRepository
-                .findAllByRequestorNot(requestor, getPageable(from, size))
+                .findAllByRequestorNot(requestor, pageable)
                 .stream()
                 .map(this::getItemRequestDtoWithItems)
                 .collect(Collectors.toList());
@@ -82,14 +80,5 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private User getUserById(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException("User with id = " + userId + " not found"));
-    }
-
-    private Pageable getPageable(int from, int size) {
-        if (from < 0) {
-            throw new BadRequestException("Pagination parameter from should not be negative but was " + from);
-        } else if (size <= 0) {
-            throw new BadRequestException("Pagination parameter size should be positive but was " + size);
-        }
-        return PageRequest.of(from / size, size, Sort.by("created").ascending());
     }
 }

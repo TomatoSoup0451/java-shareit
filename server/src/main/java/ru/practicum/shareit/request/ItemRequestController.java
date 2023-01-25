@@ -1,6 +1,9 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -39,6 +42,10 @@ public class ItemRequestController {
     @GetMapping(value = "/all", params = {"from", "size"})
     public List<ItemRequestDto> getAllRequests(@RequestParam int from, @RequestParam final int size,
                                                @RequestHeader("X-Sharer-User-Id") long requestorId) {
-        return itemRequestService.getAllRequests(from, size, requestorId);
+        return itemRequestService.getAllRequests(getPageable(from, size), requestorId);
+    }
+
+    private Pageable getPageable(int from, int size) {
+        return PageRequest.of(from / size, size, Sort.by("created").ascending());
     }
 }
