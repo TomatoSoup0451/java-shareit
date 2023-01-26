@@ -66,7 +66,7 @@ public class ItemRequestIntegrationTest {
 
     @Test
     public void shouldGetListWithOneRequestForUser1WithPagination() {
-        List<ItemRequestDto> itemRequests = itemRequestService.getAllRequests(PageRequest.of(0, 1), 1L);
+        List<ItemRequestDto> itemRequests = itemRequestService.getAllRequests(1L, PageRequest.of(0, 1));
         assertThat(itemRequests.size(), equalTo(1));
         assertThat(itemRequests.get(0).getId(), equalTo(1L));
         assertThat(itemRequests.get(0).getDescription(), equalTo("Description1"));

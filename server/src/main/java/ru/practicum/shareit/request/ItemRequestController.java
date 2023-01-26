@@ -42,7 +42,7 @@ public class ItemRequestController {
     @GetMapping(value = "/all", params = {"from", "size"})
     public List<ItemRequestDto> getAllRequests(@RequestParam int from, @RequestParam final int size,
                                                @RequestHeader("X-Sharer-User-Id") long requestorId) {
-        return itemRequestService.getAllRequests(getPageable(from, size), requestorId);
+        return itemRequestService.getAllRequests(requestorId, getPageable(from, size));
     }
 
     private Pageable getPageable(int from, int size) {

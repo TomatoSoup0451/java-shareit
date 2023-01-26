@@ -138,8 +138,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusWaiting() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.WAITING))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -150,8 +150,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusFuture() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndStartAfterOrderByIdDesc(anyLong(), any(LocalDateTime.class)))
@@ -163,8 +163,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusRejected() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.REJECTED))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -175,8 +175,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusCurrent() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndStartBeforeAndEndAfterOrderByIdDesc(anyLong(),
@@ -190,8 +190,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusPast() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndEndBeforeOrderByIdDesc(anyLong(), any(LocalDateTime.class)))
@@ -203,8 +203,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusAll() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdOrderByIdDesc(1))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -215,8 +215,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusWaitingWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.WAITING,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
@@ -229,8 +229,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusFutureWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndStartAfterOrderByIdDesc(anyLong(), any(LocalDateTime.class),
@@ -244,8 +244,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusRejectedWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdAndStatusOrderByIdDesc(1, Status.REJECTED,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
@@ -258,8 +258,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusCurrentWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndStartBeforeAndEndAfterOrderByIdDesc(anyLong(),
@@ -275,8 +275,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusPastWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByBookerIdAndEndBeforeOrderByIdDesc(anyLong(), any(LocalDateTime.class),
@@ -290,8 +290,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetUserBookingsAndStatusAllWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByBookerIdOrderByIdDesc(1,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
@@ -304,8 +304,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusWaiting() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.WAITING))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -316,8 +316,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusFuture() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndStartAfter(anyLong(), any(LocalDateTime.class)))
@@ -329,8 +329,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOnwerBookingsAndStatusRejected() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.REJECTED))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -341,8 +341,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusCurrent() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndStartBeforeAndEndAfter(anyLong(), any(LocalDateTime.class)))
@@ -354,8 +354,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusPast() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndEndBefore(anyLong(), any(LocalDateTime.class)))
@@ -367,8 +367,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusAll() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerId(1))
                 .thenReturn(List.of(Booking.builder().build()));
@@ -379,8 +379,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusWaitingWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.WAITING,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
@@ -393,8 +393,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusFutureWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndStartAfter(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -407,8 +407,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOnwerBookingsAndStatusRejectedWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerIdAndStatus(1, Status.REJECTED,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))
@@ -421,8 +421,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusCurrentWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndStartBeforeAndEndAfter(anyLong(), any(LocalDateTime.class),
@@ -436,8 +436,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusPastWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository
                         .findByOwnerIdAndEndBefore(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -450,8 +450,8 @@ public class BookingServiceUnitTest {
     @Test
     public void shouldReturnListWith1ElementWhenGetOwnerBookingsAndStatusAllWithPageable() {
         Mockito
-                .when(mockUserRepository.findById(anyLong()))
-                .thenReturn(Optional.of(User.builder().build()));
+                .when(mockUserRepository.existsById(anyLong()))
+                .thenReturn(true);
         Mockito
                 .when(mockBookingRepository.findByOwnerId(1,
                         PageRequest.of(0, 1, Sort.by("id").ascending())))

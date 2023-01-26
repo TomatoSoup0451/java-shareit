@@ -71,7 +71,7 @@ class ItemRequestControllerTest {
 
     @Test
     void shouldGetListOfRequestsWithOneElement() throws Exception {
-        when(itemRequestService.getAllRequests(any(Pageable.class), anyLong())).thenReturn(List.of(firstItemRequestDto));
+        when(itemRequestService.getAllRequests(anyLong(), any(Pageable.class))).thenReturn(List.of(firstItemRequestDto));
         mvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", 1)
                         .param("from", "0")
