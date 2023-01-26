@@ -80,8 +80,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getUserBookings(BookingState state, long bookerId) {
-        userRepository.findById(bookerId)
-                .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found"));
+        if (!userRepository.existsById(bookerId)) {
+            throw  new IdNotFoundException("User with id = " + bookerId + " not found");
+        }
         switch (state) {
             case WAITING:
                 return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.WAITING);
@@ -105,8 +106,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId) {
-        userRepository.findById(ownerId)
-                .orElseThrow(() -> new IdNotFoundException("User with id = " + ownerId + " not found"));
+        if (!userRepository.existsById(ownerId)) {
+            throw  new IdNotFoundException("User with id = " + ownerId + " not found");
+        }
         switch (state) {
             case WAITING:
                 return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.WAITING);
@@ -128,8 +130,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getUserBookings(BookingState state, long bookerId, Pageable pageable) {
-        userRepository.findById(bookerId)
-                .orElseThrow(() -> new IdNotFoundException("User with id = " + bookerId + " not found"));
+        if (!userRepository.existsById(bookerId)) {
+            throw  new IdNotFoundException("User with id = " + bookerId + " not found");
+        }
         switch (state) {
             case WAITING:
                 return bookingRepository.findByBookerIdAndStatusOrderByIdDesc(bookerId, Status.WAITING, pageable);
@@ -154,8 +157,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getOwnerItemsBookings(BookingState state, long ownerId, Pageable pageable) {
-        userRepository.findById(ownerId)
-                .orElseThrow(() -> new IdNotFoundException("User with id = " + ownerId + " not found"));
+        if (!userRepository.existsById(ownerId)) {
+                throw  new IdNotFoundException("User with id = " + ownerId + " not found");
+        }
         switch (state) {
             case WAITING:
                 return bookingRepository.findByOwnerIdAndStatus(ownerId, Status.WAITING, pageable);

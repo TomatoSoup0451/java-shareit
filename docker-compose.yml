@@ -24,7 +24,7 @@ services:
       - SPRING_DATASOURCE_USER=root
       - SPRING_DATASOURCE_PASSWORD=root
 
-  db:
+  postgres:
     image: postgres:13.7-alpine
     container_name: shareit-db
     volumes:

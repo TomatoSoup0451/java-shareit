@@ -13,7 +13,7 @@ public interface ItemRequestService {
 
     ItemRequestDto getRequest(long requestorId, long requestId);
 
-    List<ItemRequestDto> getAllRequests(Pageable pageable, long requestorId);
+    List<ItemRequestDto> getAllRequests(long requestorId, Pageable pageable);
 
     List<ItemRequestDto> getAllRequests(long requestorId);
 }
